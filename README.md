@@ -25,7 +25,7 @@ Existují i mnohem zajímavější a robustnější přístupy, ale zvažte své
  - potom se od sebe oddělí jenotlivé symboly a najde se jejich nejmenší obdelníkový bounding-box. Nejdříve se oddělí v ose x (tam kde je celý sloupe nulový/blízký nule) a pak to samé podle osy y. Pozor na objekty, které jsou nadsebou. Při průchodu y-osou může ještě dojít k dělení.
  - teď víme kde jsou jednotlivé symboly, ty je třeba zoreznat
  - zjistí se, které jsou noty a které ne. Nota má hlavičku a ta jde lehce najít, viz. zdroje
- - symboly se klasifikuje (buď nejaké klasické OCR, ale raději bych zkusil SWIF) viz. opencv. Musí být invariantní vůči měřítku/scale.
+ - symboly se klasifikuje (buď nejaké klasické OCR, ale raději bych zkusil SIFT, FAST ...) viz. opencv. Musí být invariantní vůči měřítku/scale.
  - noty se klasifikují zvlášt hlavička (celá, půlová), zvlášt prapor/vlajka. Pozor na to, že některé noty jsou spojeny vertikálně stéblem/stonekem nebo horizontálně pomocí praporu/vlajky. A také mohou mít za sebou tečku nebo před sebou křížek, béčko nebo hraj-normálně. Tohle ještě nemám domyšleno.
  - Pak se podle první linky a pozice a rozestupem mezi linkami zjistí výška tónu
  - (?) to se nacpe do syntetizeru a přehraje
