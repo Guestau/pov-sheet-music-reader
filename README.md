@@ -48,6 +48,7 @@ Trénovací sada na symboly notového zápisu je ve zdrojích. Také budeme pot�
  
 
 # Nějaké zdroje, ze kterých asi budeme/můžeme čerpat
+- http://msw3.stanford.edu/~mmakar/mentorship/ee368_4.pdf
 - https://github.com/acieroid/overscore
 - http://www.ece.rutgers.edu/~kdana/Capstone2012/Reports/CDG3.pdf
 - stackoverflow.com/questions/675077/ocr-for-sheet-music
