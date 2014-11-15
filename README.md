@@ -16,20 +16,22 @@ Existují i mnohem zajímavější a robustnější přístupy, ale zvažte své
  
 # Co to bude dělat
  - veme to obrázek
- - převede na binární (metodou otsu?)
+ - :white_check_mark: převede na binární (metodou otsu?)
  - (?) najde homografii a upraví rotaci. Pokud se fotí foťákem nikdy to nebude rovně. Ale pro začátek můžeme předpokládat zprávně natočený obrázek a není zkreslený.
- - udělá se histogram podle y osy
- - linky osnovy udělají 5 velkých vrcholů
- - oddělí se jednotlivé řádky. 
- - pro každou osnovu se odeberou linky. To funguje tak že se projíždí obrázek tam kde jsou ty velké vrcholy z histogramu.  Pixel se označí za bílý pokud má nad sebou nebo podsebou bílý pixel.
- - potom se od sebe oddělí jenotlivé symboly a najde se jejich nejmenší obdelníkový bounding-box. Nejdříve se oddělí v ose x (tam kde je celý sloupe nulový/blízký nule) a pak to samé podle osy y. Pozor na objekty, které jsou nadsebou. Při průchodu y-osou může ještě dojít k dělení.
- - teď víme kde jsou jednotlivé symboly, ty je třeba zoreznat
- - zjistí se, které jsou noty a které ne. Nota má hlavičku a ta jde lehce najít, viz. zdroje
- - symboly se klasifikuje (buď nejaké klasické OCR, ale raději bych zkusil SIFT, FAST ...) viz. opencv. Musí být invariantní vůči měřítku/scale.
+ - :white_check_mark: udělá se histogram podle y osy
+ - :white_check_mark: linky osnovy udělají 5 velkých vrcholů
+ - (?) oddělí se jednotlivé řádky. 
+ - :white_check_mark: najde se sirka linky
+ - :white_check_mark: najde se vyska radku
+ - :white_check_mark: pro každou osnovu se odeberou linky. To funguje tak že se projíždí obrázek tam kde jsou ty velké vrcholy z histogramu. Zjistí se kolik je černych pixelů směrem nahoru a kolik dolů, to se sečte Ppokud je to menšírovno vyšce řádku +-2 pixely tak se to černé pixely vymažou.
+  - Alternativně se nejdříve detekují hlavičky (na linkách a mezi linkami), u odstraňování linek se zohlední hlavičky not, abyt nedocházelo rozbití celých a půlových not
+ - :white_check_mark: potom se od sebe oddělí jenotlivé symboly a najde se jejich nejmenší obdelníkový bounding-box. cv2.findContours
+ - teď víme kde jsou jednotlivé symboly, ty je třeba rozeznat
+ - zjistí se, které jsou noty a které ne. Nota má hlavičku a ta jde "lehce" najít, viz. zdroje, cv2.matchTemplate. Tady bude problem s celými a půlovými notami
+ - symboly se klasifikují (buď nejaké klasické OCR neco lepšího) viz. opencv. Musí být invariantní vůči měřítku/scale.
  - noty se klasifikují zvlášt hlavička (celá, půlová), zvlášt prapor/vlajka. Pozor na to, že některé noty jsou spojeny vertikálně stéblem/stonekem nebo horizontálně pomocí praporu/vlajky. A také mohou mít za sebou tečku nebo před sebou křížek, béčko nebo hraj-normálně. Tohle ještě nemám domyšleno.
  - Pak se podle první linky a pozice a rozestupem mezi linkami zjistí výška tónu
  - (?) to se nacpe do syntetizeru a přehraje
- - a je to :)
  
 Trénovací sada na symboly notového zápisu je ve zdrojích. Také budeme potřebovat napsat nejaké testy to znamená připravit nějaké jednoduché noty, přepsat (prohnat jiným toolem, aby zjistil noty) a pak porovnat, že naše appka dává stejný výsledek. 
 
