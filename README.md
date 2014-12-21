@@ -3,7 +3,7 @@ pov-sheet-music-reader
 
 POV - Sheet Music Reader
 
-# Zadnání jak jsem ho navrhl Hradišovi
+# Zadnání jak jsem ho navrhl Hradišovi 
 
 Implementujte OCR metodu pro přepis tištěných not. Můžete předpokládat, že jsou obrazy stránek velmi dobře pořízené a že nejsou stránky geometricky deformované. Přesnost rozpoznání vyhodnoťte na vhodné sadě obrázků.
 Standardní a poměrně jednoduchý přístup může být:
