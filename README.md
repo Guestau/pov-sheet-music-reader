@@ -15,36 +15,25 @@ Standardní a poměrně jednoduchý přístup může být:
 Existují i mnohem zajímavější a robustnější přístupy, ale zvažte své možnosti a schopnost. 
  
 # Co to bude dělat
- - převede obraz na binární metodou OTSU
- - udělá se histogram podle y osy
- - linky osnovy udělají 5 velkých vrcholů, za linku je považován každý vrchol větší než 80% maxima
- - oddělí se jednotlivé řádky podle počtu linek
- - najde se sirka linky (nejčastější šířka vrcholu), najde se výška řádku (nejčastější rozestup mezi vrcholy – a to po počátku první linky k počátku druhé linky)
- - pro každou osnovu se odeberou linky. To funguje tak, že se projíždí obrázek pro každý vrchol histogramu. Zjistí se kolik je černých pixelů směrem nahoru a kolik dolů. Pokud je to menší rovno výšce řádku +-2 pixely tak se černé pixely vymažou. 
- - Alternativně se nejdříve detekují hlavičky (na linkách a mezi linkami), u odstraňování linek se zohlední hlavičky not, aby nedocházelo rozbití celých a půlových not
- - potom se od sebe oddělí jednotlivé symboly a najde se jejich obdélníkový bounding-box. cv2.findContours
- - zjistí se, které ve kterých symbolech jsou noty a kde ne. Nota má hlavičku a ta jde "lehce" najít, cv2.matchTemplate. Tady bude problém s celými a půlovými notami, takže je možná pro zjednodušení vynecháme.
- - symboly se klasifikují nejspíše kNN nebo SVM, jako feature vektor poslouží buď celý obrázek nebo HOG. Train-set od Audiveris.
- - noty se klasifikují zvlášť hlavička (celá, půlová), zvlášť prapor/vlajka. Pozor na to, že některé noty jsou spojeny vertikálně stéblem/stonkem nebo horizontálně pomocí praporu/vlajky. Hlavičky mohou být také nad sebou (i mírně vedle sebe) v akordu. A také mohou mít za nebo nad sebou tečku nebo před sebou posuvky. Tohle by mělo přešít nalezení kontur popsané výše.
- - pak se podle první linky a pozice a rozestupem mezi linkami zjistí výška tónu
-
- - a je to :)
+ - veme to obrázek
+ - :white_check_mark: převede na binární (metodou otsu?)
+ - (?) najde homografii a upraví rotaci. Pokud se fotí foťákem nikdy to nebude rovně. Ale pro začátek můžeme předpokládat zprávně natočený obrázek a není zkreslený.
+ - :white_check_mark: udělá se histogram podle y osy
+ - :white_check_mark: linky osnovy udělají 5 velkých vrcholů
+ - (?) oddělí se jednotlivé řádky. 
+ - :white_check_mark: najde se sirka linky
+ - :white_check_mark: najde se vyska radku
+ - :white_check_mark: pro každou osnovu se odeberou linky. To funguje tak že se projíždí obrázek tam kde jsou ty velké vrcholy z histogramu. Zjistí se kolik je černych pixelů směrem nahoru a kolik dolů, to se sečte Ppokud je to menšírovno vyšce řádku +-2 pixely tak se to černé pixely vymažou.
+  - Alternativně se nejdříve detekují hlavičky (na linkách a mezi linkami), u odstraňování linek se zohlední hlavičky not, abyt nedocházelo rozbití celých a půlových not
+ - :white_check_mark: potom se od sebe oddělí jenotlivé symboly a najde se jejich nejmenší obdelníkový bounding-box. cv2.findContours
+ - teď víme kde jsou jednotlivé symboly, ty je třeba rozeznat
+ - zjistí se, které jsou noty a které ne. Nota má hlavičku a ta jde "lehce" najít, viz. zdroje, cv2.matchTemplate. Tady bude problem s celými a půlovými notami
+ - symboly se klasifikují (buď nejaké klasické OCR neco lepšího) viz. opencv. Musí být invariantní vůči měřítku/scale.
+ - noty se klasifikují zvlášt hlavička (celá, půlová), zvlášt prapor/vlajka. Pozor na to, že některé noty jsou spojeny vertikálně stéblem/stonekem nebo horizontálně pomocí praporu/vlajky. A také mohou mít za sebou tečku nebo před sebou křížek, béčko nebo hraj-normálně. Tohle ještě nemám domyšleno.
+ - Pak se podle první linky a pozice a rozestupem mezi linkami zjistí výška tónu
+ - (?) to se nacpe do syntetizeru a přehraje
  
 Trénovací sada na symboly notového zápisu je ve zdrojích. Také budeme potřebovat napsat nejaké testy to znamená připravit nějaké jednoduché noty, přepsat (prohnat jiným toolem, aby zjistil noty) a pak porovnat, že naše appka dává stejný výsledek. 
-
-# Zjednodušení – předpoklady
- - Dokonale rovný obrázek (např.: převeden z PDF)
- - Neuvažujeme:
- - Akordy
- - Rytmické notové skupiny http://musescore.org/cs/p%C5%99%C3%ADru%C4%8Dka/notov%C3%BD-z%C3%A1pis/hlasy tedy noty spojené v taktu, tak i noty spojené přes více řádků (mezi klíči). Obecně i propojení více řádků, například závorkami a čárami
- - Notové zápisy bubnů a jiných specifických nástrojů
- - Linky http://musescore.org/cs/linky
- - Svorky http://musescore.org/cs/svorky a obecně doplňující text (slova písně, tempo atd.)  nad a pod osnovou
- - Legata http://musescore.org/cs/legato
- - Ligatury http://musescore.org/cs/ligatura
- - Hlasy http://musescore.org/cs/p%C5%99%C3%ADru%C4%8Dka/notov%C3%BD-z%C3%A1pis/hlasy
- - Volta http://musescore.org/cs/volta
-
 
 ## Technologie
  - python 2.7 (opencv nepodporuje 3.3 :/)
