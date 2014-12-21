@@ -10,9 +10,8 @@ __author__ = 'Marek'
 
 class NoteHeadDetector:
 
-    def __init__(self, staff_line_space):
+    def __init__(self, staff_line_space, template):
         self.staff_line_space = staff_line_space
-        template = cv2.imread("../resources/black_head.png", cv2.IMREAD_GRAYSCALE)
         self.template = cv2.resize(template, (0, 0), fx=staff_line_space / template.shape[0], fy=staff_line_space / template.shape[0])
 
     def heads(self, segment, threshold=0.7):
@@ -30,20 +29,21 @@ if __name__ == '__main__':
     # img = cv2.imread("../test_sheets/mam_jizvu_na_rtu_noty/mam_jizvu_na_rtu_noty-1.png", cv2.IMREAD_GRAYSCALE)
     # line_height = 12.0
     img = cv2.imread("../test_sheets/vltava.png", cv2.IMREAD_GRAYSCALE)
-    line_height = 9.0
+    # line_height = 9.0
 
     return_value, binary_image = cv2.threshold(img, 0, 1, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 
-    # staff_finder = StaffFinder(binary_image)
-    # staff_remover = StaffRemover(staff_finder, binary_image)
-    # image_without_staff_lines = staff_remover.remove_all()
-    #
-    # img = image_without_staff_lines*255
+    staff_finder = StaffFinder(binary_image)
+    staff_remover = StaffRemover(staff_finder, binary_image)
+    image_without_staff_lines = staff_remover.remove_all()
+
+    img = image_without_staff_lines*255
+    line_height = staff_finder.line_height + staff_finder.space_height
 
     org = img.copy()
     template = cv2.imread("../resources/black_head.png", cv2.IMREAD_GRAYSCALE)
 
-    detector = NoteHeadDetector(line_height)
+    detector = NoteHeadDetector(line_height, cv2.imread("../resources/black_head.png", cv2.IMREAD_GRAYSCALE))
     rectangles = detector.heads(img, 0.7)
 
     output_image = cv2.cvtColor(org, cv2.COLOR_GRAY2RGB)
