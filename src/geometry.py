@@ -95,24 +95,29 @@ def tuples2rectangles(list_of_tuples):
         yield Rectangle(*item)
 
 
-def group_rectangles(rectangle_list):
+def group_rectangles(rectangle_list, condition=None):
     """
 
     :param rectangle_list:
+    :param condition: function (group_item, rectangle) -> True/False, if returns True rectangles are grouped
+        default lambda group_item, rectangle: rectangle.is_inside(group_item) or group_item.is_inside(rectangle)
     :return: list groups (list) of rectangles e.g. [[r], [r1, r2]] sorted by area
     """
-    overlaying_rectangles = []
+    if condition is None:
+        condition = lambda group_item, rectangle: rectangle.is_inside(group_item) or group_item.is_inside(rectangle)
+
+    grouped_rectangles = []
     for rectangle in rectangle_list:
         in_group = -1
-        for group_index, group in enumerate(overlaying_rectangles):
-            if any(group_item for group_item in group if rectangle.is_inside(group_item) or group_item.is_inside(rectangle)):
+        for group_index, group in enumerate(grouped_rectangles):
+            if any(group_item for group_item in group if condition(group_item, rectangle)):
                 in_group = group_index
                 break
         if in_group >= 0:
-            overlaying_rectangles[in_group].append(rectangle)
+            grouped_rectangles[in_group].append(rectangle)
         else:
-            overlaying_rectangles.append([rectangle])
-    return [sorted(group, key=lambda r: r.width*r.height, reverse=True) for group in overlaying_rectangles]
+            grouped_rectangles.append([rectangle])
+    return [sorted(group, key=lambda r: r.width*r.height, reverse=True) for group in grouped_rectangles]
 
 
 def add_overlaying_rectangles(rectangle_group):
