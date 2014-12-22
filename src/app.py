@@ -10,7 +10,10 @@ import cv2
 from matplotlib import pyplot as plt
 
 
-image = cv2.imread("../test_sheets/vltava.png", cv2.IMREAD_GRAYSCALE)
+# image = cv2.imread("../test_sheets/vltava.png", cv2.IMREAD_GRAYSCALE)
+# image = cv2.imread("../test_sheets/Den_preslavny_Tenor.png", cv2.IMREAD_GRAYSCALE)
+# image = cv2.imread("../test_sheets/Requiem_for_a_Dream/Requiem_for_a_Dream-1.png", cv2.IMREAD_GRAYSCALE)
+image = cv2.imread("../test_noty/test_pause/test_pause(5).png", cv2.IMREAD_GRAYSCALE)
 
 # Otsu's thresholding after Gaussian filtering
 blur_image = False
@@ -32,13 +35,16 @@ for group in symbol_extractor.bounding_groups:
 
 for line_index in staff_finder.line_indices:
     cv2.line(output_image, (0, line_index), (output_image.shape[1], line_index), (200, 200, 200), 1)
-
-# for group in symbol_extractor.bounding_groups:
-#     box = group[0]
-#     symbol = image_without_staff_lines[box.bottom:box.top, box.left:box.right]
-#     file_name = hashlib.sha1(symbol).hexdigest()
-#     cv2.imwrite(os.path.dirname(os.path.abspath(__file__)) + "\\..\\tmp\\" + file_name + ".png", symbol, [int(cv2.IMWRITE_JPEG_QUALITY), 90])
-
+'''
+i = 0
+for group in symbol_extractor.bounding_groups:
+    box = group[0]
+    symbol = image_without_staff_lines[box.bottom:box.top, box.left:box.right]
+    file_name = "p16(" + str(i) + ")"#hashlib.sha1(symbol).hexdigest()
+    i += 1
+    cv2.imwrite("..\\tmp\\" + file_name + ".png", symbol, [int(cv2.IMWRITE_JPEG_QUALITY), 90])
+#    cv2.imwrite(os.path.dirname(os.path.abspath(__file__)) + "\\..\\tmp\\" + file_name + ".png", symbol, [int(cv2.IMWRITE_JPEG_QUALITY), 90])
+'''
 # plt.subplot(1, 2, 1)
 # plt.plot(xrange(staff_finder.histogram.shape[0]), staff_finder.histogram)
 # plt.title('Histogram')
