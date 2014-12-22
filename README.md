@@ -35,6 +35,19 @@ Existují i mnohem zajímavější a robustnější přístupy, ale zvažte své
  
 Trénovací sada na symboly notového zápisu je ve zdrojích. Také budeme potřebovat napsat nejaké testy to znamená připravit nějaké jednoduché noty, přepsat (prohnat jiným toolem, aby zjistil noty) a pak porovnat, že naše appka dává stejný výsledek. 
 
+# Zjednodušení – předpoklady
+ - Dokonale rovný obrázek (např.: převeden z PDF)
+ - Neuvažujeme:
+   * Akordy
+   * Rytmické notové skupiny http://musescore.org/cs/p%C5%99%C3%ADru%C4%8Dka/notov%C3%BD-z%C3%A1pis/hlasy tedy noty spojené v taktu, tak i noty spojené přes více řádků (mezi klíči). Obecně i propojení více řádků, například závorkami a čárami
+   * Notové zápisy bubnů a jiných specifických nástrojů
+   * Linky http://musescore.org/cs/linky
+   * Svorky http://musescore.org/cs/svorky a obecně doplňující text (slova písně, tempo atd.)  nad a pod osnovou
+   * Legata http://musescore.org/cs/legato
+   * Ligatury http://musescore.org/cs/ligatura
+   * Hlasy http://musescore.org/cs/p%C5%99%C3%ADru%C4%8Dka/notov%C3%BD-z%C3%A1pis/hlasy
+   * Volta http://musescore.org/cs/volta
+
 ## Technologie
  - python 2.7 (opencv nepodporuje 3.3 :/)
  - opencv verze 2.4.10 [viz.](http://www.lfd.uci.edu/~gohlke/pythonlibs/#opencv)
