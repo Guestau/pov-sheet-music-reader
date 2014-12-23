@@ -3,6 +3,9 @@ import os
 from src.staff.symbol_extractor import SymbolExtractor
 from staff.staff_remover import StaffRemover
 from staff.staff_finder import StaffFinder
+# import for classification
+from knn_classification import Classification
+import numpy as np
 
 __author__ = 'Marek'
 
@@ -13,7 +16,7 @@ from matplotlib import pyplot as plt
 # image = cv2.imread("../test_sheets/vltava.png", cv2.IMREAD_GRAYSCALE)
 # image = cv2.imread("../test_sheets/Den_preslavny_Tenor.png", cv2.IMREAD_GRAYSCALE)
 # image = cv2.imread("../test_sheets/Requiem_for_a_Dream/Requiem_for_a_Dream-1.png", cv2.IMREAD_GRAYSCALE)
-image = cv2.imread("../test_noty/test_pause/test_pause(5).png", cv2.IMREAD_GRAYSCALE)
+image = cv2.imread("../test_noty/test16/test16(5).png", cv2.IMREAD_GRAYSCALE)
 
 # Otsu's thresholding after Gaussian filtering
 blur_image = False
@@ -40,7 +43,7 @@ i = 0
 for group in symbol_extractor.bounding_groups:
     box = group[0]
     symbol = image_without_staff_lines[box.bottom:box.top, box.left:box.right]
-    file_name = "p16(" + str(i) + ")"#hashlib.sha1(symbol).hexdigest()
+    file_name = "9(" + str(i) + ")"#hashlib.sha1(symbol).hexdigest()
     i += 1
     cv2.imwrite("..\\tmp\\" + file_name + ".png", symbol, [int(cv2.IMWRITE_JPEG_QUALITY), 90])
 #    cv2.imwrite(os.path.dirname(os.path.abspath(__file__)) + "\\..\\tmp\\" + file_name + ".png", symbol, [int(cv2.IMWRITE_JPEG_QUALITY), 90])
@@ -50,6 +53,23 @@ for group in symbol_extractor.bounding_groups:
 # plt.title('Histogram')
 # plt.xticks([])
 # plt.yticks([])
+
+# train KNearestNeighbour
+knn = Classification()
+# trying classification
+i=0
+for group in symbol_extractor.bounding_groups:
+    box = group[0]
+    symbol = image_without_staff_lines[box.bottom:box.top, box.left:box.right]
+    if symbol.shape[0] > knn.ybox or symbol.shape[1] > knn.xbox:
+        continue
+    what, distance= knn.classify(symbol)
+    print 'co,x,y,vzdalenost(0=ok):', what, box.bottom, box.left, distance
+    file_name = what + '_' + str(i)
+    if distance == 0.0:
+        file_name = 'ok_'+ file_name
+    cv2.imwrite("..\\tmp\\" + file_name + ".png", symbol, [int(cv2.IMWRITE_JPEG_QUALITY), 90])
+    i+=1
 
 # plt.subplot(1, 2, 2)
 plt.imshow(output_image)
