@@ -3,11 +3,11 @@ import cv2
 from matplotlib import pyplot as plt
 
 # box with note
-xbox = 65
-ybox = 150
+xbox = 70
+ybox = 160
 # number pattern and count
 xcount = 140
-yvector = ['#','b','1','2','4','8','16','k','o','p','p4','p8','p16','t','pnt','tnc','t2','t3','t4','t34','t68','tc']
+yvector = ['#','b','1','2','4','8','8s','16','16s','k','o','p','p4','p8','p16','t','pnt','tnc','t2','t3','t4','t34','t68','tc']
 ycount = len(yvector)
 
 
@@ -15,7 +15,7 @@ ycount = len(yvector)
 def classify(image):
     image_bw = cv2.bitwise_not(image)
     box = np.zeros([ybox, xbox], dtype=np.uint8)
-    box[:im_bw.shape[0], :im_bw.shape[1]] = image_bw
+    box[:image_bw.shape[0], :image_bw.shape[1]] = image_bw
     test = box.reshape(-1,xbox*ybox).astype(np.float32)
     ret,result,neighbours,dist = knn.find_nearest(test,k=5)
 

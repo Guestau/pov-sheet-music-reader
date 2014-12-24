@@ -5,11 +5,11 @@ import os.path
 class Classification:
     def __init__(self):
         # box with note
-        self.xbox = 65
-        self.ybox = 150
+        self.xbox = 70
+        self.ybox = 160
         # number pattern and count
         self.xcount = 140
-        self.yvector = ['#','b','1','2','4','8','16','k','o','p','p4','p8','p16','t','pnt','tnc','t2','t3','t4','t34','t68','tc']
+        self.yvector = ['#','b','1','2','4','8','8s','16','16s','k','o','p','p4','p8','p16','t','pnt','tnc','t2','t3','t4','t34','t68','tc']
         self.ycount = len(self.yvector)
         self.knn = cv2.KNearest()
         # train from knn_data.npz prepared file
