@@ -15,14 +15,14 @@ class Classification:
         self.ycount = len(self.yvector)
         self.knn = cv2.KNearest()
         # train from knn_data.npz prepared file
-        if os.path.exists('knn_data.npz'):
-            with np.load('knn_data.npz') as data:
+        if os.path.exists('knn/knn_data.npz'):
+            with np.load('knn/knn_data.npz') as data:
                 train = data['train']
                 train_labels = data['train_labels']
                 self.knn.train(train, train_labels)
-        elif os.path.exists('dataset.png'):
+        elif os.path.exists('knn/dataset.png'):
             # train from image dataset.png
-            gray = cv2.imread('dataset.png', cv2.CV_LOAD_IMAGE_GRAYSCALE)
+            gray = cv2.imread('knn/dataset.png', cv2.CV_LOAD_IMAGE_GRAYSCALE)
             cells = [np.hsplit(row, self.xcount) for row in np.vsplit(gray, self.ycount)]
             x = np.array(cells)
             train = x[:, :3 * self.xcount / 4].reshape(-1, self.xbox * self.ybox).astype(

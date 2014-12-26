@@ -38,7 +38,7 @@ for j in yvector:
         dataset[y:y + im_bw.shape[0], x:x + im_bw.shape[1]] = im_bw
     y = y + ybox
 
-cv2.imwrite('dataset.png', dataset)
+cv2.imwrite('knn/dataset.png', dataset)
 
 gray = dataset
 # Now we split the image to 5000 cells, each 20x20 size
@@ -76,10 +76,10 @@ accuracy = correct * 100.0 / result.size
 print accuracy
 
 # save the data
-np.savez('knn_data.npz', train=train, train_labels=train_labels)
+np.savez('knn/knn_data.npz', train=train, train_labels=train_labels)
 '''
 # Now load the data
-with np.load('knn_data.npz') as data:
+with np.load('knn/knn_data.npz') as data:
     print data.files
     train = data['train']
     train_labels = data['train_labels']

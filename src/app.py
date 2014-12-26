@@ -36,7 +36,7 @@ symbol_extractor = SymbolExtractor(image_without_staff_lines)
 #     cv2.imwrite("..\\tmp\\" + file_name + ".png", symbol, [int(cv2.IMWRITE_JPEG_QUALITY), 90])
 #     cv2.imwrite(os.path.dirname(os.path.abspath(__file__)) + "\\..\\tmp\\" + file_name + ".png", symbol, [int(cv2.IMWRITE_JPEG_QUALITY), 90])
 
-detect(staff_finder, symbol_extractor, image_without_staff_lines)
+# detect(staff_finder, symbol_extractor, image_without_staff_lines)
 
 # ## PLOT ALL SHITS
 output_image = cv2.cvtColor(image_without_staff_lines, cv2.COLOR_GRAY2RGB)
