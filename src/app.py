@@ -11,8 +11,8 @@ from matplotlib import pyplot as plt
 
 
 # image = cv2.imread("../test_sheets/vltava.png", cv2.IMREAD_GRAYSCALE)
-image = cv2.imread("../test_sheets/mafia_main_theme/mafia_main_theme-1.png", cv2.IMREAD_GRAYSCALE)
-# image = cv2.imread("../test_sheets/test.png", cv2.IMREAD_GRAYSCALE)
+# image = cv2.imread("../test_sheets/mafia_main_theme/mafia_main_theme-1.png", cv2.IMREAD_GRAYSCALE)
+image = cv2.imread("../test_sheets/test1.png", cv2.IMREAD_GRAYSCALE)
 # image = cv2.imread("../test_sheets/Den_preslavny_Tenor.png", cv2.IMREAD_GRAYSCALE)
 # image = cv2.imread("../test_sheets/Requiem_for_a_Dream/Requiem_for_a_Dream-1.png", cv2.IMREAD_GRAYSCALE)
 # image = cv2.imread("../test_noty/test16/test16(3).png", cv2.IMREAD_GRAYSCALE)
