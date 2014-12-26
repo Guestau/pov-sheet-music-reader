@@ -18,7 +18,8 @@ class NoteHeadDetector:
         if segment.shape[0] < self.staff_line_space or segment.shape[1] < self.staff_line_space:
             return
 
-        result = cv2.matchTemplate(img, self.template, cv2.TM_CCOEFF_NORMED)
+        #result = cv2.matchTemplate(img, self.template, cv2.TM_CCOEFF_NORMED)
+        result = cv2.matchTemplate(segment, self.template, cv2.TM_CCOEFF_NORMED)
         points = np.where(result >= threshold)
         w, h = self.template.shape
 
