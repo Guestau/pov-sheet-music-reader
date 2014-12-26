@@ -1,5 +1,5 @@
 from itertools import permutations
-from src.geometry import Rectangle, group_rectangles
+from geometry import Rectangle, group_rectangles
 
 __author__ = 'Marek'
 

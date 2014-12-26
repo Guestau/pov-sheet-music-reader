@@ -1,9 +1,9 @@
 import cv2
 import numpy as np
 from matplotlib import pyplot as plt
-from src.geometry import Rectangle, group_rectangles, add_overlaying_rectangles
-from src.staff.staff_finder import StaffFinder
-from src.staff.staff_remover import StaffRemover
+from geometry import Rectangle, group_rectangles, add_overlaying_rectangles
+from staff.staff_finder import StaffFinder
+from staff.staff_remover import StaffRemover
 
 __author__ = 'Marek'
 

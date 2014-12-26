@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from src.geometry import tuples2rectangles, group_rectangles, add_overlaying_rectangles
+from geometry import tuples2rectangles, group_rectangles, add_overlaying_rectangles
 
 __author__ = 'Marek'
 

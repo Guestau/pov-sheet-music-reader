@@ -1,6 +1,6 @@
 import hashlib
 import os
-from src.staff.symbol_extractor import SymbolExtractor
+from staff.symbol_extractor import SymbolExtractor
 from staff.staff_remover import StaffRemover
 from staff.staff_finder import StaffFinder
 
