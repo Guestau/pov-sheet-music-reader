@@ -10,10 +10,13 @@ import cv2
 from matplotlib import pyplot as plt
 
 
-image = cv2.imread("../test_sheets/vltava.png", cv2.IMREAD_GRAYSCALE)
+# image = cv2.imread("../test_sheets/vltava.png", cv2.IMREAD_GRAYSCALE)
+image = cv2.imread("../test_sheets/mafia_main_theme/mafia_main_theme-1.png", cv2.IMREAD_GRAYSCALE)
+# image = cv2.imread("../test_sheets/test.png", cv2.IMREAD_GRAYSCALE)
 # image = cv2.imread("../test_sheets/Den_preslavny_Tenor.png", cv2.IMREAD_GRAYSCALE)
 # image = cv2.imread("../test_sheets/Requiem_for_a_Dream/Requiem_for_a_Dream-1.png", cv2.IMREAD_GRAYSCALE)
 # image = cv2.imread("../test_noty/test16/test16(3).png", cv2.IMREAD_GRAYSCALE)
+# image = cv2.imread("../test_noty/test1/test1(1).png", cv2.IMREAD_GRAYSCALE)
 # image = cv2.imread("../test_noty/test_artikulace_repetice/test_rep_both.png", cv2.IMREAD_GRAYSCALE)
 
 # Otsu's thresholding after Gaussian filtering
@@ -45,8 +48,9 @@ for group in symbol_extractor.bounding_groups:
     color = (255, 0, 0,)
     cv2.rectangle(output_image, group[0].bottom_left, group[0].top_right, color, 1)
 
-for line_index in staff_finder.line_indices:
-    cv2.line(output_image, (0, line_index), (output_image.shape[1], line_index), (200, 200, 200), 1)
+for staff in staff_finder.staffs_with_helper_lines:
+    for line_index in staff:
+        cv2.line(output_image, (0, line_index), (output_image.shape[1], line_index), (200, 200, 200), 1)
 
 # plt.subplot(1, 2, 1)
 # plt.plot(xrange(staff_finder.histogram.shape[0]), staff_finder.histogram)

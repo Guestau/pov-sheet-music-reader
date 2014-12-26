@@ -14,6 +14,7 @@ class StaffFinder:
         self._line_width = None
         self._space_height = None
         self._line_indices = None
+        self._staffs = None
 
     @property
     def histogram(self):
@@ -93,3 +94,51 @@ class StaffFinder:
 
         self._space_height = np.average(heights)
         return self._space_height
+
+    @property
+    def staffs(self):
+        """
+        Groups lines of staff into one array. Each array contains array line indices belonging to staff
+        :rtype : list of staff with list of indices
+        """
+        if self._staffs:
+            return self._staffs
+
+        self._staffs = []
+
+        line_order = 0
+        current_staff = 0
+        for line_index in self.line_indices:
+            if line_order == 0:
+                self._staffs.append([])
+            self._staffs[current_staff].append(line_index)
+
+            line_order += 1
+
+            if line_order >= self.STAFF_LINES:
+                line_order = 0
+                current_staff += 1
+
+        return self._staffs
+
+    @property
+    def staffs_with_helper_lines(self, max=4):
+        """
+        Extends staff with additional 4 (max) helper lines above and under staff. Lines are estimated bases on first/last
+        line position, staff line height and staff space height
+
+        :rtype : list[list]
+        """
+
+        def get_index(base_peak, index, sign=+1):
+            line_height = self.line_height + self.space_height
+            return base_peak + int(round(sign*index*line_height))
+
+        staffs = []
+        for staff in self.staffs:
+            lines = [get_index(staff[0], i, -1) for i in xrange(max, 0, -1)] + \
+                    staff + \
+                    [get_index(staff[-1], i, +1) for i in xrange(1, max+1)]
+            staffs.append(lines)
+
+        return staffs
