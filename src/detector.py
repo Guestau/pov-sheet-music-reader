@@ -19,8 +19,8 @@ def detect(staff_finder, symbol_extractor, image_without_staff_lines):
                     jako ten co je v note_head_detector (nerika jaka je to nota, jenom jestli to je nota).
                     klasifikace pak pokracuje zvlast pro noty zvlast pro ostatni symboly
     """
-    note_detect = NoteHeadDetector(staff_finder.space_height,
-                                   cv2.imread("../resources/black_head.png", cv2.IMREAD_GRAYSCALE))
+    #note_detect = NoteHeadDetector(staff_finder.space_height,
+    #                               cv2.imread("../resources/black_head2.png", cv2.IMREAD_GRAYSCALE))
     # train KNearestNeighbour
     knn = Classification()
     # trying classification
@@ -29,12 +29,15 @@ def detect(staff_finder, symbol_extractor, image_without_staff_lines):
         i += 1
         box = group[0]
         symbol = image_without_staff_lines[box.bottom:box.top, box.left:box.right]
+        """
         if symbol.shape[0] > knn.ybox or symbol.shape[1] > knn.xbox:
             refx = -11
             count = 0
             listrefx = []
             for rect in note_detect.heads(symbol):
                 listrefx.append(rect.x)
+            if not listrefx:
+                continue
             listrefx.sort()
             for x in listrefx:
                 if abs(refx - x) > 10:
@@ -53,9 +56,10 @@ def detect(staff_finder, symbol_extractor, image_without_staff_lines):
                 cv2.imwrite("..\\tmp\\" + file_name + ".png", sym, [int(cv2.IMWRITE_JPEG_QUALITY), 90])
                 startx = k
             continue
+        """
         what, distance = knn.classify(symbol)
         print 'co,x,y,vzdalenost(0=ok):', what, box.bottom, box.left, distance
-        file_name = what + '_' + str(i)
+        file_name = what + '_' + str(distance) + '_' + str(i)
         if distance == 0.0:
             file_name = 'ok_' + file_name
         cv2.imwrite("..\\tmp\\" + file_name + ".png", symbol, [int(cv2.IMWRITE_JPEG_QUALITY), 90])
