@@ -1,4 +1,5 @@
 from detector import detect
+from note_head_detector import AllNoteHeadsDetector, WholeNoteHeadDetector, HalfNoteHeadDetector
 from staff.symbol_extractor import SymbolExtractor
 from staff.staff_remover import StaffRemover
 from staff.staff_finder import StaffFinder
@@ -25,6 +26,8 @@ blurred_image = cv2.GaussianBlur(image, (3, 3), 0) if blur_image else image
 _, binary_image = cv2.threshold(image, 0, 1, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 
 staff_finder = StaffFinder(binary_image)
+head_detector = AllNoteHeadsDetector(staff_finder.space_line_height)
+notes_heads = head_detector.heads(image, 0.65)
 staff_remover = StaffRemover(staff_finder, binary_image)
 
 image_without_staff_lines = staff_remover.remove_all() * 255
@@ -51,6 +54,15 @@ for group in symbol_extractor.bounding_groups:
 for staff in staff_finder.staffs_with_helper_lines:
     for line_index in staff:
         cv2.line(output_image, (0, line_index), (output_image.shape[1], line_index), (200, 200, 200), 1)
+
+for i, head in enumerate(notes_heads):
+    color = (0, 0, 255)
+    if head_detector.detector_for_result[i] == WholeNoteHeadDetector:
+        color = (0, 255, 0)
+    if head_detector.detector_for_result[i] == HalfNoteHeadDetector:
+        color = (0, 255, 255)
+
+    cv2.rectangle(output_image, head.top_left, head.bottom_right, color, 1)
 
 # plt.subplot(1, 2, 1)
 # plt.plot(xrange(staff_finder.histogram.shape[0]), staff_finder.histogram)

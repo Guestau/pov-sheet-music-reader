@@ -96,6 +96,10 @@ class StaffFinder:
         return self._space_height
 
     @property
+    def space_line_height(self):
+        return self.space_height + self.line_height
+
+    @property
     def staffs(self):
         """
         Groups lines of staff into one array. Each array contains array line indices belonging to staff
@@ -131,8 +135,7 @@ class StaffFinder:
         """
 
         def get_index(base_peak, index, sign=+1):
-            line_height = self.line_height + self.space_height
-            return base_peak + int(round(sign*index*line_height))
+            return base_peak + int(round(sign*index*self.space_line_height))
 
         staffs = []
         for staff in self.staffs:

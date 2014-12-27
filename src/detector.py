@@ -34,7 +34,7 @@ def detect(staff_finder, symbol_extractor, image_without_staff_lines):
             refx = -11
             count = 0
             listrefx = []
-            for rect in note_detect.heads(symbol):
+            for rect in note_detect.notes_heads(symbol):
                 listrefx.append(rect.x)
             if not listrefx:
                 continue
@@ -44,7 +44,7 @@ def detect(staff_finder, symbol_extractor, image_without_staff_lines):
                     count += 1
                     refx = x
             width = symbol.shape[1] / count
-            # print width , count , symbol.shape[1], note_detect.heads(symbol)
+            # print width , count , symbol.shape[1], note_detect.notes_heads(symbol)
             startx = 0
             for k in range(width, symbol.shape[1], width):
                 sym = symbol[:, startx:k]
