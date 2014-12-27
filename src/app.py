@@ -3,6 +3,7 @@ from note_head_detector import AllNoteHeadsDetector, WholeNoteHeadDetector, Half
 from staff.symbol_extractor import SymbolExtractor
 from staff.staff_remover import StaffRemover
 from staff.staff_finder import StaffFinder
+import sys
 # import for classification
 
 __author__ = 'Marek'
@@ -10,15 +11,30 @@ __author__ = 'Marek'
 import cv2
 from matplotlib import pyplot as plt
 
+image = None
 
-# image = cv2.imread("../test_sheets/vltava.png", cv2.IMREAD_GRAYSCALE)
+image = cv2.imread("../test_sheets/vltava.png", cv2.IMREAD_GRAYSCALE)
 # image = cv2.imread("../test_sheets/mafia_main_theme/mafia_main_theme-1.png", cv2.IMREAD_GRAYSCALE)
-image = cv2.imread("../test_sheets/test1.png", cv2.IMREAD_GRAYSCALE)
+# image = cv2.imread("../test_sheets/test1.png", cv2.IMREAD_GRAYSCALE)
 # image = cv2.imread("../test_sheets/Den_preslavny_Tenor.png", cv2.IMREAD_GRAYSCALE)
 # image = cv2.imread("../test_sheets/Requiem_for_a_Dream/Requiem_for_a_Dream-1.png", cv2.IMREAD_GRAYSCALE)
 # image = cv2.imread("../test_noty/test16/test16(3).png", cv2.IMREAD_GRAYSCALE)
 # image = cv2.imread("../test_noty/test1/test1(1).png", cv2.IMREAD_GRAYSCALE)
 # image = cv2.imread("../test_noty/test_artikulace_repetice/test_rep_both.png", cv2.IMREAD_GRAYSCALE)
+
+# any command line arguments given? 
+# if true, argv[1] is considered to be filename
+if (len(sys.argv) > 1):
+    image = cv2.imread(sys.argv[1], cv2.IMREAD_GRAYSCALE)
+
+# Check if file is image
+if (image == None):
+    print ""
+    print "Specified file does is not an image!"
+    print ""
+    print "Rerun " + sys.argv[0] + " [filename]"
+    print "- [filename] is input image"
+    exit()
 
 # Otsu's thresholding after Gaussian filtering
 blur_image = False
