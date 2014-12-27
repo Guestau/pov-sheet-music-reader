@@ -6,11 +6,11 @@ import os.path
 class Classification:
     def __init__(self):
         # box with note
-        self.xbox = 70
-        self.ybox = 160
+        self.xbox = 100#70
+        self.ybox = 100#160
         # number pattern and count
-        self.xcount = 140
-        self.yvector = ['#', 'b', '1', '2', '4', '8', '8s', '16', '16s', 'k', 'o', 'p', 'p4', 'p8', 'p16', 't', 'pnt',
+        self.xcount = 220
+        self.yvector = ['#', 'b', '1', '2', '4', '8', '16', 'k', 'o', 'p', 'p4', 'p8', 'p16', 't', 'pnt',
                         'tnc', 't2', 't3', 't4', 't34', 't68', 'tc']
         self.ycount = len(self.yvector)
         self.knn = cv2.KNearest()
@@ -33,23 +33,22 @@ class Classification:
             train_labels = np.repeat(k, 3 * self.xcount / 4)[:, np.newaxis]
             test_labels = np.repeat(k, self.xcount / 4)[:, np.newaxis]
             self.knn.train(train, train_labels)
-            '''
             ret,result,neighbours,dist = self.knn.find_nearest(test,k=5)
             matches = result==test_labels
             correct = np.count_nonzero(matches)
             accuracy = correct*100.0/result.size
             print 'accuracy', accuracy, '%'
-            '''
         else:
             print "ERROR: not found files knn_data.npz or dataset.png need for classifier!"
 
     # classify image
     def classify(self, img):
-        image_bw = cv2.bitwise_not(img)
-        box = np.zeros([self.ybox, self.xbox], dtype=np.uint8)
-        box[:image_bw.shape[0], :image_bw.shape[1]] = image_bw
+        box = cv2.bitwise_not(cv2.resize(img,(100,100)))
+        #image_bw = cv2.bitwise_not(img)
+        #box = np.zeros([self.ybox, self.xbox], dtype=np.uint8)
+        #box[:image_bw.shape[0], :image_bw.shape[1]] = image_bw
         test = box.reshape(-1, self.xbox * self.ybox).astype(np.float32)
-        ret, result, neighbours, dist = self.knn.find_nearest(test, k=3)
+        ret, result, neighbours, dist = self.knn.find_nearest(test, k=10)
 
         # print ret,result,neighbours,dist
         # print ret,yvector[int(ret)], dist[0][0]
