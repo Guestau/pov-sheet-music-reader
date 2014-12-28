@@ -6,7 +6,7 @@ import os.path
 
 knn = Classification()
 
-# yvector = ['#', 'b', '1', '2', '4', '8', '8s', '16', '16s', 'k', 'o', 'p', 'p4', 'p8', 'p16', 't', 'pnt', 'tnc', 't2',
+# yvector = ['#', 'b', '1', '2', '4', '8', '16', 'k', 'o', 'p', 'p4', 'p8', 'p16', 't', 'pnt', 'tnc', 't2',
 #           't3', 't4', 't34', 't68', 'tc']
 ycount = len(knn.yvector)
 
@@ -18,13 +18,11 @@ def testClassification():
         index = 3 * knn.xcount / 4
         testvec = []
         for i in knn.yvector:
-            #testvec[knn.yvector.index(i)] = 0
             testvec.append(0)
         path = '../../training/' + pattern + '/' + pattern + '(' + str(index) + ').png'
         while os.path.exists(path):
             img = cv2.imread(path, cv2.CV_LOAD_IMAGE_GRAYSCALE)
             what, dist = knn.classify(img)
-            #print pattern, what, knn.yvector.index(what)
             testvec[knn.yvector.index(what)] += 1
             index += 1
             path = '../../training/' + pattern + '/' + pattern + '(' + str(index) + ').png'
