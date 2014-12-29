@@ -87,9 +87,11 @@ for i, head in enumerate(notes_heads):
 # plt.yticks([])
 
 # plt.subplot(1, 2, 2)
+#"""
 plt.imshow(output_image)
 plt.title('Result')
 plt.xticks([])
 plt.yticks([])
 
 plt.show()
+#"""
