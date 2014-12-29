@@ -9,9 +9,9 @@ class Classification:
         self.xbox = 100#70
         self.ybox = 100#160
         # number pattern and count
-        self.xcount = 220
-        self.yvector = ['#', 'b', '1', '2', '4', '8', '16', 'k', 'o', 'p', 'p4', 'p8', 'p16', 't', 'pnt',
-                        'tnc', 't2', 't3', 't4', 't34', 't68', 'tc']
+        self.xcount = 350   # max 350! (more => memory overflow)
+        self.yvector = ['#', '1', '2', '4', '8', '16', 'b', 'k', 'o', 'p', 'p4', 'p8', 'p16', 'pnt', 't', 't2', 't3', 't4', 't6', 't8', 't22', 't24', 't34', 't44', 't68', 'tc', 'tnc']
+
         self.ycount = len(self.yvector)
         self.knn = cv2.KNearest()
         # train from knn_data.npz prepared file
