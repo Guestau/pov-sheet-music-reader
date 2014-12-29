@@ -72,55 +72,18 @@ cells = [np.hsplit(row, knn.xcount) for row in np.vsplit(dataset, ycount)]
 # Make it into a Numpy array. It size will be ('xcout','ycount','xbox','ybox') #(50,100,20,20)
 x = np.array(cells)
 
-# Now we prepare train_data and test_data.
-train = x[:, :3 * knn.xcount / 4].reshape(-1, knn.xbox * knn.ybox).astype(np.float32)  # Size = (xcout*ycount/2,xbox*ybox)
-test = x[:, 3 * knn.xcount / 4:knn.xcount].reshape(-1, knn.xbox * knn.ybox).astype(np.float32)  # Size = (xcout*ycount/2,xbox*ybox)
+# Now we prepare train_data 
+train = x[:, : knn.xcount ].reshape(-1, knn.xbox * knn.ybox).astype(np.float32)  # Size = (xcout*ycount/2,xbox*ybox)
 
-# Create labels for train and test data
+# Create labels for training data
 k = np.arange(ycount)
-train_labels = np.repeat(k, 3 * knn.xcount / 4)[:, np.newaxis]
-test_labels = np.repeat(k, knn.xcount / 4)[:, np.newaxis]
+train_labels = np.repeat(k,  knn.xcount )[:, np.newaxis]
 
-# Initiate kNN, train the data, then test it
+# Initiate kNN, train the data
 knn.knn.train(train, train_labels)
-ret, result, neighbours, dist = knn.knn.find_nearest(test, k=5)
-
-# Now we check the accuracy of classification
-# For that, compare the result with test_labels and check which are wrong
-matches = result == test_labels
-correct = np.count_nonzero(matches)
-accuracy = correct * 100.0 / result.size
-print accuracy
-
 
 
 # save the data
 np.savez('knn_data.npz', train=train, train_labels=train_labels)
 print "Trained data saved"
 
-'''
-# Now load the data
-with np.load('knn/knn_data.npz') as data:
-    print data.files
-    train = data['train']
-    train_labels = data['train_labels']
-'''
-
-
-'''
-# test
-for i in range(17):
-    img = cv2.imread('../../training/abc/abc(' + str(50 + i) + ').png', cv2.CV_LOAD_IMAGE_GRAYSCALE)
-    # print ret,result,neighbours,dist
-    # print ret,yvector[int(ret)], dist[0][0]
-    what, dist = knn.classify(img)
-    print what, dist
-'''
-
-'''
-#vypis testu klasifikatoru
-tstarr = testClassification()
-print "   ", knn.yvector
-for i in knn.yvector:
-    print i, tstarr[knn.yvector.index(i)]
-'''
