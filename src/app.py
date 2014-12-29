@@ -83,7 +83,7 @@ for group in symbol_extractor.bounding_groups:
 
 for staff in staff_finder.staffs_with_helper_lines:
     for line_index in staff:
-        cv2.line(output_image, (0, line_index), (output_image.shape[1], line_index), (200, 200, 200), 1)
+        cv2.line(output_image, (0, line_index), (output_image.shape[1], line_index), (220, 220, 220), 1)
 
 for i, head in enumerate(notes_heads):
     color = (0, 0, 255)
