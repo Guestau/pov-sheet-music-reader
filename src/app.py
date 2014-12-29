@@ -5,8 +5,10 @@ from staff.staff_remover import StaffRemover
 from staff.staff_finder import StaffFinder
 import sys
 # import for classification
+from knn.knn_classification import Classification
+knn = Classification()
 
-__author__ = 'Marek'
+__author__ = 'Marek' + 'Matej'
 
 import cv2
 from matplotlib import pyplot as plt
@@ -32,7 +34,7 @@ if (image == None):
     print ""
     print "Specified file does is not an image!"
     print ""
-    print "Rerun " + sys.argv[0] + " [filename]"
+    print "Rerun: " + sys.argv[0] + " [filename]"
     print "- [filename] is input image"
     exit()
 
@@ -49,6 +51,8 @@ staff_remover = StaffRemover(staff_finder, binary_image)
 image_without_staff_lines = staff_remover.remove_all() * 255
 symbol_extractor = SymbolExtractor(image_without_staff_lines)
 
+print staff_finder.staffs
+
 # i = 0
 # for group in symbol_extractor.bounding_groups:
 #     box = group[0]
@@ -58,14 +62,24 @@ symbol_extractor = SymbolExtractor(image_without_staff_lines)
 #     cv2.imwrite("..\\tmp\\" + file_name + ".png", symbol, [int(cv2.IMWRITE_JPEG_QUALITY), 90])
 #     cv2.imwrite(os.path.dirname(os.path.abspath(__file__)) + "\\..\\tmp\\" + file_name + ".png", symbol, [int(cv2.IMWRITE_JPEG_QUALITY), 90])
 
-# detect(staff_finder, symbol_extractor, image_without_staff_lines)
+#detect(staff_finder, symbol_extractor, image_without_staff_lines)
 
 # ## PLOT ALL SHITS
 output_image = cv2.cvtColor(image_without_staff_lines, cv2.COLOR_GRAY2RGB)
-
+poradi = 0
 for group in symbol_extractor.bounding_groups:
     color = (255, 0, 0,)
     cv2.rectangle(output_image, group[0].bottom_left, group[0].top_right, color, 1)
+    
+    box = group[0]
+    symbol = image_without_staff_lines[box.bottom:box.top, box.left:box.right]
+    
+    what, dist = knn.classify(symbol)
+    if (dist < 7e+07):
+        cv2.putText(output_image, what ,box.bottom_left, cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,0))
+
+    
+    poradi += 1
 
 for staff in staff_finder.staffs_with_helper_lines:
     for line_index in staff:
