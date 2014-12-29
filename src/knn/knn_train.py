@@ -3,12 +3,25 @@ import cv2
 from matplotlib import pyplot as plt
 from knn_classification import Classification
 import os.path
+import random
+import sys
 
 knn = Classification()
 
-# yvector = ['#', 'b', '1', '2', '4', '8', '16', 'k', 'o', 'p', 'p4', 'p8', 'p16', 't', 'pnt', 'tnc', 't2',
-#           't3', 't4', 't34', 't68', 'tc']
+# box with note
+# xbox = 70
+# ybox = 160
+# number pattern and count
+# xcount = 140
+# yvector = ['#', 'b', '1', '2', '4', '8', '16', 'k', 'o', 'p', 'p4', 'p8', 'p16', 't', 'pnt', 'tnc', 't2', 't3', 't4', 't34', 't68', 'tc']
+
 ycount = len(knn.yvector)
+# create training set
+full_set_size = 1001
+full_set = []
+for i in range(full_set_size): full_set.append(i)
+subset = random.sample(full_set, knn.xcount)
+
 
 # test klasifikatoru
 def testClassification():
@@ -35,16 +48,24 @@ dataset = np.zeros(size, dtype=np.uint8)
 
 y = 0
 for j in knn.yvector:
-    for i in range(knn.xcount):
+    #for i in range(knn.xcount):
+    x = 0
+    for i in subset:
         img = cv2.imread('../../training/' + j + '/' + j + '(' + str(i) + ').png', cv2.CV_LOAD_IMAGE_GRAYSCALE)
-        # print j+'('+str(i)+').png'
+        #print j+'('+str(i)+').png'
         im_bw = cv2.bitwise_not(cv2.resize(img,(100,100)))
-        x = i * knn.xbox
         dataset[y:y + im_bw.shape[0], x:x + im_bw.shape[1]] = im_bw
+        x += knn.xbox
     y = y + knn.ybox
 
 cv2.imwrite('dataset.png', dataset)
 
+print "Subset of samples (index numbers):"
+print subset
+
+
+gray = dataset
+# Now we split the image to 5000 cells, each 20x20 size
 # split the image to 'size' cells, each 'xbox'x'ybox' size
 cells = [np.hsplit(row, knn.xcount) for row in np.vsplit(dataset, ycount)]
 
@@ -70,16 +91,22 @@ matches = result == test_labels
 correct = np.count_nonzero(matches)
 accuracy = correct * 100.0 / result.size
 print accuracy
-'''
+
+
+
 # save the data
 np.savez('knn_data.npz', train=train, train_labels=train_labels)
+print "Trained data saved"
 
+'''
 # Now load the data
 with np.load('knn/knn_data.npz') as data:
     print data.files
     train = data['train']
     train_labels = data['train_labels']
 '''
+
+
 '''
 # test
 for i in range(17):
@@ -90,8 +117,10 @@ for i in range(17):
     print what, dist
 '''
 
+'''
 #vypis testu klasifikatoru
 tstarr = testClassification()
 print "   ", knn.yvector
 for i in knn.yvector:
     print i, tstarr[knn.yvector.index(i)]
+'''
