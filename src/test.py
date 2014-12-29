@@ -67,7 +67,7 @@ for i in knn.yvector:
 file.write("\r\n")
 
 for i in knn.yvector: 
-    file.write(i + ":")
+    file.write(i)
     for j in knn.yvector:
         file.write("\t" + str(matrix[i][j]))
     file.write("\r\n")
