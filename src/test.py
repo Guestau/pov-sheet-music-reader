@@ -1,3 +1,10 @@
+'''
+Run python test.py [N] [output]
+    [N] test size (default = 100)
+    [output] output file (default = ../matrix.txt)
+    
+Expects test&training data in ../training/
+'''
 __author__ = 'Matej'
 
 import numpy as np
