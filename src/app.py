@@ -13,16 +13,12 @@ __author__ = 'Marek' + 'Matej'
 import cv2
 from matplotlib import pyplot as plt
 
+# note name vector
+name = ['E', 'F', 'G', 'A', 'H', 'C', 'D']
+
 image = None
 
-image = cv2.imread("../test_sheets/vltava.png", cv2.IMREAD_GRAYSCALE)
-# image = cv2.imread("../test_sheets/mafia_main_theme/mafia_main_theme-1.png", cv2.IMREAD_GRAYSCALE)
-# image = cv2.imread("../test_sheets/test1.png", cv2.IMREAD_GRAYSCALE)
-# image = cv2.imread("../test_sheets/Den_preslavny_Tenor.png", cv2.IMREAD_GRAYSCALE)
-# image = cv2.imread("../test_sheets/Requiem_for_a_Dream/Requiem_for_a_Dream-1.png", cv2.IMREAD_GRAYSCALE)
-# image = cv2.imread("../test_noty/test16/test16(3).png", cv2.IMREAD_GRAYSCALE)
-# image = cv2.imread("../test_noty/test1/test1(1).png", cv2.IMREAD_GRAYSCALE)
-# image = cv2.imread("../test_noty/test_artikulace_repetice/test_rep_both.png", cv2.IMREAD_GRAYSCALE)
+image = cv2.imread("../test_sheets/vltava.png", cv2.IMREAD_GRAYSCALE) # default image
 
 # any command line arguments given? 
 # if true, argv[1] is considered to be filename
@@ -45,62 +41,83 @@ _, binary_image = cv2.threshold(image, 0, 1, cv2.THRESH_BINARY + cv2.THRESH_OTSU
 
 staff_finder = StaffFinder(binary_image)
 head_detector = AllNoteHeadsDetector(staff_finder.space_line_height)
-notes_heads = head_detector.heads(image, 0.65)
 staff_remover = StaffRemover(staff_finder, binary_image)
 
+# line height
+h = staff_finder.space_line_height
+
+# optimized font size
+font_size = 3*h/40
+
 image_without_staff_lines = staff_remover.remove_all() * 255
+
+output_image = cv2.cvtColor(image_without_staff_lines, cv2.COLOR_GRAY2RGB)
+
+# go through score line by line (row by row)
+for staff in staff_finder.staffs_with_helper_lines:
+    
+    # cut out propper part of score
+    line_l = image[staff[0] - h : staff[len(staff) - 1] + h , : ]
+    # detect note heads
+    heads = head_detector.heads(line_l, 0.65)
+
+    # go through note heads
+    for i, head in enumerate(heads):
+        color = (0, 0, 255)
+        # get head type
+        if head_detector.detector_for_result[i] == WholeNoteHeadDetector:
+            color = (0, 255, 0)
+        if head_detector.detector_for_result[i] == HalfNoteHeadDetector:
+            color = (0, 255, 255)
+        
+        # mark note head
+        cv2.rectangle(output_image, (head.left, head.top + staff[0] - int(h)), (head.right, head.bottom + staff[0] - int(h)), color, 1)
+
+        # compute note head center. need to invert Y axis
+        center = staff[len(staff) - 1] + h - (staff[0] - h ) - (head.bottom + head.top)/2 - h # vpocet stredu, korekce
+        pos = int(center/(h/2))
+        # write note name
+        cv2.putText(output_image, name[pos % 7], (head.right, head.top + staff[0] - int(h)), cv2.FONT_HERSHEY_SIMPLEX, font_size, (0, 0, 255))
+
+# extract symbols        
 symbol_extractor = SymbolExtractor(image_without_staff_lines)
 
-print staff_finder.staffs
+# plot all extracted symbols in bounding boxes
+# also plot symbol types
 
-# i = 0
-# for group in symbol_extractor.bounding_groups:
-#     box = group[0]
-#     symbol = image_without_staff_lines[box.bottom:box.top, box.left:box.right]
-#     file_name = "9(" + str(i) + ")"+str(symbol.shape[1])#hashlib.sha1(symbol).hexdigest()
-#     i += 1
-#     cv2.imwrite("..\\tmp\\" + file_name + ".png", symbol, [int(cv2.IMWRITE_JPEG_QUALITY), 90])
-#     cv2.imwrite(os.path.dirname(os.path.abspath(__file__)) + "\\..\\tmp\\" + file_name + ".png", symbol, [int(cv2.IMWRITE_JPEG_QUALITY), 90])
-
-#detect(staff_finder, symbol_extractor, image_without_staff_lines)
-
-# ## PLOT ALL SHITS
-output_image = cv2.cvtColor(image_without_staff_lines, cv2.COLOR_GRAY2RGB)
-poradi = 0
 for group in symbol_extractor.bounding_groups:
     color = (255, 0, 0,)
     cv2.rectangle(output_image, group[0].bottom_left, group[0].top_right, color, 1)
     
     box = group[0]
     symbol = image_without_staff_lines[box.bottom:box.top, box.left:box.right]
-    
+    # classify symbol
     what, dist = knn.classify(symbol)
-    if (dist < 7e+07):
-        cv2.putText(output_image, what ,box.bottom_left, cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,0))
+    # if we know (or we think we know) what it is, PLOT IT!
+    if (dist < 1e+08):
+        cv2.putText(output_image, what ,box.bottom_left, cv2.FONT_HERSHEY_SIMPLEX, font_size, (0,255,0))
 
-    
-    poradi += 1
 
+# plot lines back
 for staff in staff_finder.staffs_with_helper_lines:
     for line_index in staff:
         cv2.line(output_image, (0, line_index), (output_image.shape[1], line_index), (220, 220, 220), 1)
+for staff in staff_finder.staffs:
+    for line_index in staff:
+        cv2.line(output_image, (0, line_index), (output_image.shape[1], line_index), (110, 110, 110), 1)
 
-for i, head in enumerate(notes_heads):
-    color = (0, 0, 255)
-    if head_detector.detector_for_result[i] == WholeNoteHeadDetector:
-        color = (0, 255, 0)
-    if head_detector.detector_for_result[i] == HalfNoteHeadDetector:
-        color = (0, 255, 255)
 
-    cv2.rectangle(output_image, head.top_left, head.bottom_right, color, 1)
+# Show histogram
+"""
+plt.subplot(1, 2, 1)
+plt.plot(xrange(staff_finder.histogram.shape[0]), staff_finder.histogram)
+plt.title('Histogram')
+plt.xticks([])
+plt.yticks([])
 
-# plt.subplot(1, 2, 1)
-# plt.plot(xrange(staff_finder.histogram.shape[0]), staff_finder.histogram)
-# plt.title('Histogram')
-# plt.xticks([])
-# plt.yticks([])
-
-# plt.subplot(1, 2, 2)
+plt.subplot(1, 2, 2)
+#"""
+# Show image with all the objects
 #"""
 plt.imshow(output_image)
 plt.title('Result')
