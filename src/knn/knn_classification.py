@@ -6,8 +6,8 @@ import os.path
 class Classification:
     def __init__(self):
         # box with note
-        self.xbox = 100#70
-        self.ybox = 100#160
+        self.xbox = 100
+        self.ybox = 100
         # number pattern and count
         self.xcount = 250   # max 250! (more => memory overflow, maybe more possible, but...)
         self.yvector = ['#', '1', '2', '4', '8', '16', 'b', 'k', 'o', 'p', 'p4', 'p8', 'p16', 'pnt', 't', 't2', 't3', 't4', 't6', 't8', 't22', 't24', 't34', 't44', 't68', 'tc', 'tnc']
@@ -26,7 +26,7 @@ class Classification:
             cells = [np.hsplit(row, self.xcount) for row in np.vsplit(gray, self.ycount)]
             x = np.array(cells)
             train = x[:, :self.xcount].reshape(-1, self.xbox * self.ybox).astype(
-                np.float32)  # Size = (xcout*ycount/2,xbox*ybox)
+                np.float32)
 
             k = np.arange(self.ycount)
             train_labels = np.repeat(k,  self.xcount )[:, np.newaxis]
